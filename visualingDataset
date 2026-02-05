@@ -1,0 +1,35 @@
+import csv
+import matplotlib.pyplot as plt
+
+
+def read_dataset_from_csv(filename="hydrationdataset.csv"):
+    dataset = []
+    with open(filename, mode="r") as file:
+        reader = csv.reader(file)
+        next(reader)
+        for row in reader:
+            dataset.append(row)
+    return dataset
+
+
+dataset = read_dataset_from_csv()
+
+user_gender = input("Enter your gender (Male/Female): ").capitalize()
+user_age_range = input("Enter your age range (18-25, 26-35, 36-45, 46-55, 56-64, 65-73, 74-82): ")
+
+filtered_data = []
+age_ranges = []
+water_intakes = []
+
+for item in dataset:
+    # matches your screenshot logic: fill arrays for the chosen gender
+    if item[0].capitalize() == user_gender:
+        age_ranges.append(item[1])
+        water_intakes.append(float(item[4]))
+
+plt.bar(age_ranges, water_intakes, color="skyblue")
+plt.xlabel("Age Range")
+plt.ylabel("Average Water Intake (litres per week)")
+plt.title(f"Average Water Intake Recommendations\nGender: {user_gender}\n")
+plt.savefig("avgwaterintakeuserchart.png")
+plt.show()
