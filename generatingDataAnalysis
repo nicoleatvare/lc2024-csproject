@@ -1,0 +1,76 @@
+import random
+import csv
+
+
+def random_age():
+    return random.choice(["18-25", "26-35", "36-45", "46-55", "56-64", "65-73", "74-82"])
+
+
+def generate_dataset():
+    data = []
+    for _ in range(1000):
+        gender = random.choice(["Male", "Female"])
+        age = random_age()
+        weekly_water = random.uniform(5, 30)
+        daily_water = round(weekly_water / 7, 2)
+        avg_water = round((weekly_water / 2) + random.uniform(-2, 5), 1)
+        data.append([gender, age, weekly_water, daily_water, avg_water])
+    return data
+
+
+def save_to_csv(data, filename="hydrationdataset.csv"):
+    with open(filename, mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(
+            [
+                "gender",
+                "age",
+                "weekly water consumption (litres)",
+                "daily water consumption (litres)",
+                "average water intake",
+            ]
+        )
+        writer.writerows(data)
+
+
+def find_water_intake(gender, age):
+    filtereddata = []
+    for item in dataset:
+        if item[0] == gender and item[1] == age:
+            filtereddata.append(item[4])
+
+    if filtereddata:
+        return round(sum(filtereddata) / len(filtereddata), 2)
+    else:
+        return "no data"
+
+
+def find_fitness_age(gender, daily_water_consumption):
+    filtereddata = []
+    for item in dataset:
+        if item[0] == gender and item[3] == daily_water_consumption:
+            filtereddata.append(item[1])
+
+    if filtereddata:
+        fitness_agerange = random.choice(filtereddata)
+        return fitness_agerange
+    else:
+        return "no data"
+
+dataset = generate_dataset()
+save_to_csv(dataset)
+
+print("If I am male or female and I am in the age ranges of (18-25, 26-35, 36-45, 46-55, 56-64, 65-73, 74-82), what should my water intake be?")
+
+find_gender = input("Enter your gender (Male or Female): ").capitalize()
+find_age = input("Enter your age range (18-25, 26-35, 36-45, 46-55, 56-64, 65-73, 74-82): ")
+
+avg_water_intake = find_water_intake(find_gender, find_age)
+print(f"Your average water intake recommendation is {avg_water_intake} litres per week")
+
+print("\nIf I am male or female and I drink a certain amount of water per day, what is my fitness age?")
+find_gender2 = input("Enter your gender (Male or Female): ").capitalize()
+find_daily_water_consumption = float(input("Enter in how much you drink per day: "))
+
+fitness_agerange = find_fitness_age(find_gender2, find_daily_water_consumption)
+print(f"Your fitness age range is {fitness_agerange}")
